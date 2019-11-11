@@ -1,7 +1,8 @@
 import React, { useState, useReducer } from 'react';
 import styled from 'styled-components'
 import Typography from '@material-ui/core/Typography'
-import BaseSlider from './components/Slider/BaseSlider'
+import Slider from '@material-ui/core/Slider'
+
 
 interface SimulatorState {
   money: number;
@@ -12,6 +13,7 @@ interface SimulatorReducerAction {
   type: string;
   payload: number;
 }
+
 
 const AVAILABLE_MONTHS = [3, 6, 9, 12, 18]
 const MAX_MONEY = 50000
@@ -38,33 +40,42 @@ const SimulatorInitialState: SimulatorState = {
   month_index: 0
 }
 
+const SimulatorBody = styled.div`
+  background: white
+  padding: 1rem
+  display: flex
+  width: 90%
+  height: 80%
+  position: absolute
+  top: 20%
+  left: 10%
+`
+
 const Simulator: React.FC = () => {
-  const state = useReducer(SimulatorReducer, SimulatorInitialState)
-  const SimulatorBody = styled.div`
-    background: white
-    padding: 1rem
-    display: flex
-    width: 90%
-    height: 80%
-    position: absolute
-    top: 20%
-    left: 10%
-  `
+  const [ state, dispatch ] = useReducer(SimulatorReducer, SimulatorInitialState)
+  const [sl, setSl] = useState(0)
 
   return (
     <SimulatorBody>
-      <Typography variant='h1'>Hello World!</Typography>
-      <BaseSlider onChange={() => {}} value={1}/>
+      <Typography variant='h1' style={{flexGrow: 1}}>{Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3}).format(state.money)}</Typography>
+      <div style={{flexGrow: 1}}>
+        <Slider 
+          onChange={(e, payload) => {dispatch({type: 'set_money', payload: (payload as number)})}}
+          value={state.money}
+          min={MIN_MONEY}
+          max={MAX_MONEY}
+        />
+      </div>
     </SimulatorBody>
   )
 }
 
-const FrontPage: React.SFC = () => {
-  const SectionOne = styled.div`
-    background: #ac9184
-    height: 100vh
-  `
+const SectionOne = styled.div`
+  background: #ac9184
+  height: 100vh
+`
 
+const FrontPage: React.SFC = () => {
   return (
     <SectionOne>
       <Simulator/>
