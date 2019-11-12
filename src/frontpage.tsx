@@ -1,12 +1,11 @@
-import React, { useState, useReducer } from 'react';
-import styled from 'styled-components'
-import Typography from '@material-ui/core/Typography'
-import Slider from '@material-ui/core/Slider'
-
+import React, { useState, useReducer } from "react";
+import styled from "styled-components";
+import Typography from "@material-ui/core/Typography";
+import Slider from "@material-ui/core/Slider";
 
 interface SimulatorState {
   money: number;
-  month_index: number;
+  months: number;
 }
 
 interface SimulatorReducerAction {
@@ -14,74 +13,95 @@ interface SimulatorReducerAction {
   payload: number;
 }
 
+const AVAILABLE_MONTHS = [3, 6, 9, 12, 18];
+const MAX_MONEY = 50000;
+const MIN_MONEY = 5000;
 
-const AVAILABLE_MONTHS = [3, 6, 9, 12, 18]
-const MAX_MONEY = 50000
-const MIN_MONEY = 5000
-
-const SimulatorReducer = (state: SimulatorState, action: SimulatorReducerAction) => {
-  switch(action.type) {
-    case 'increment_month':
-      if(state.month_index == AVAILABLE_MONTHS.length - 1) return state
-      return {...state, month_index: state.month_index + 1 }
-    case 'decrement_month':
-      if(state.month_index <= 0) return state
-      return {...state, month_index: state.month_index - 1 }
-    case 'set_money':
-      if(action.payload <= MIN_MONEY && action.payload >= MAX_MONEY) return state
-      return {...state, money: action.payload}
+const SimulatorReducer = (
+  state: SimulatorState,
+  action: SimulatorReducerAction
+) => {
+  switch (action.type) {
+    case "set_money":
+      if (action.payload <= MIN_MONEY && action.payload >= MAX_MONEY)
+        return state;
+      return { ...state, money: action.payload };
+    case "set_months":
+      return { ...state, months: action.payload };
     default:
       throw new Error();
   }
-}
+};
 
 const SimulatorInitialState: SimulatorState = {
   money: MIN_MONEY,
-  month_index: 0
-}
+  months: AVAILABLE_MONTHS[0]
+};
 
 const SimulatorBody = styled.div`
   background: white
   padding: 1rem
   display: flex
+  flex-direction: column
   width: 90%
   height: 80%
   position: absolute
   top: 20%
   left: 10%
-`
+`;
 
 const Simulator: React.FC = () => {
-  const [ state, dispatch ] = useReducer(SimulatorReducer, SimulatorInitialState)
-  const [sl, setSl] = useState(0)
+  const [state, dispatch] = useReducer(SimulatorReducer, SimulatorInitialState);
 
   return (
     <SimulatorBody>
-      <Typography variant='h1' style={{flexGrow: 1}}>{Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3}).format(state.money)}</Typography>
-      <div style={{flexGrow: 1}}>
-        <Slider 
-          onChange={(e, payload) => {dispatch({type: 'set_money', payload: (payload as number)})}}
-          value={state.money}
-          min={MIN_MONEY}
-          max={MAX_MONEY}
+      <div>
+        <Typography variant="h1" style={{ flexGrow: 1 }}>
+          {Intl.NumberFormat("en-IN", { maximumSignificantDigits: 3 }).format(
+            state.money
+          )}
+        </Typography>
+        <div style={{ flexGrow: 1 }}>
+          <Slider
+            onChange={(e, payload) => {
+              dispatch({ type: "set_money", payload: payload as number });
+            }}
+            value={state.money}
+            min={MIN_MONEY}
+            max={MAX_MONEY}
+          />
+        </div>
+      </div>
+      <div>
+        <Typography variant="h1" style={{ flexGrow: 1 }}>
+          {state.months} Meses
+        </Typography>
+        <Slider
+          onChange={(e, payload) => {
+            dispatch({ type: "set_months", payload: payload as number });
+          }}
+          value={state.months}
+          marks={AVAILABLE_MONTHS.map(e => ({ value: e }))}
+          step={null}
+          min={AVAILABLE_MONTHS[0]}
+          max={AVAILABLE_MONTHS[AVAILABLE_MONTHS.length - 1]}
         />
       </div>
     </SimulatorBody>
-  )
-}
+  );
+};
 
 const SectionOne = styled.div`
   background: #ac9184
   height: 100vh
-`
+`;
 
 const FrontPage: React.SFC = () => {
   return (
     <SectionOne>
-      <Simulator/>
+      <Simulator />
     </SectionOne>
-  )
-}
+  );
+};
 
-export default FrontPage
-
+export default FrontPage;
