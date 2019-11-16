@@ -1,16 +1,19 @@
 import React from "react";
 import "./App.css";
+import "./base.sass";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FrontPage from "./frontpage";
 import { ThemeProvider } from "styled-components";
-import Slider from "@material-ui/core/Slider";
 
 export const Theme = {
   colors: {
     charcoal: "#333",
-    blueBlack: "#223",
+    blueBlack: "#66778d",
     gray100: "#7E8C9F",
     green100: "#25daa5"
+  },
+  fontFamilies: {
+    serif: "'Playfair Display', serif"
   }
 };
 

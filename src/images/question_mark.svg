@@ -1,0 +1,9 @@
+<svg width="580" height="400" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>Question Mark</title>
+  <ellipse ry="68.374802" rx="68.374802" id="svg_13" cy="129.124626" cx="288.124151" fill-opacity="0" stroke="#000000" fill="#000000"/>
+  <path id="svg_1" d="m283.750002,83.45313c44.999977,-3.499993 45.999979,50.499982 1,50" opacity="1" stroke-width="1.5" stroke="#000000" fill="#fff"/>
+  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="162.522009" x2="285.5" y1="133.453125" x1="285.5" stroke-width="1.5" stroke="#000" fill="none"/>
+  <ellipse ry="2.749992" rx="2.749992" id="svg_7" cy="170.249506" cx="285.749158" stroke-opacity="0" stroke-width="1.5" stroke="#0f0f00" fill="#000000"/>
+ </g>
+</svg>
