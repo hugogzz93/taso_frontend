@@ -1,5 +1,45 @@
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700&display=swap');
 
+$tempo: 0.3s
+
 .fancy-font
   font-family: 'Playfair Display', serif !important
 
+.enter__right
+  animation: enterRight 1s cubic-bezier(.66,.53,.52,1.03) 1 forwards
+
+.exit__left
+  animation: exitLeft 1s cubic-bezier(.66,.53,.52,1.03) 1 forwards
+
+// @for $i from 1 through 10
+//   .enterRight:nth-child(#{$i})
+//     animation-delay: $i * 0.2s !important
+
+.gradient__right
+  overflow: hidden
+  border: 1px solid red
+  position: relative
+  &::after
+    content: '\a'
+    border: 1px solid blue
+    width: 5rem
+    height: 100%
+    position: absolute
+    top: 0
+    right: 0
+    background: linear-gradient(to right, transparent 3%, white 45%)
+
+
+
+@keyframes enterRight
+  from 
+    transform: translateX(100%)
+  to
+    transform: translateX(0rem)
+
+@keyframes exitLeft
+  from 
+    transform: translateX(0rem)
+  to
+    transform: translateX(-100%)
+    display: none

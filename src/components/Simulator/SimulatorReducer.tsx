@@ -2,6 +2,7 @@ export interface SimulatorState {
   money: number;
   months: number;
   type: number;
+  stage: number;
 }
 
 export interface SimulatorReducerAction {
@@ -26,6 +27,8 @@ export const SimulatorReducer = (
       return { ...state, months: action.payload };
     case "set_type":
       return { ...state, type: action.payload };
+    case "toggle_stage":
+      return { ...state, stage: 1 ? 2 : 1 };
     default:
       throw new Error();
   }
@@ -34,5 +37,6 @@ export const SimulatorReducer = (
 export const SimulatorInitialState: SimulatorState = {
   money: MIN_MONEY,
   months: AVAILABLE_MONTHS[0],
-  type: 0
+  type: 0,
+  stage: 1
 };

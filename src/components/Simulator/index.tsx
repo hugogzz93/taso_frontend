@@ -2,6 +2,7 @@ import React, { useReducer, Fragment } from "react";
 import Typography from "@material-ui/core/Typography";
 import {
   Paper,
+  Box,
   FormControl,
   RadioGroup,
   Radio,
@@ -30,6 +31,7 @@ interface SimulatorRow {
 
 const Styles = {
   Simulator: {
+    background: "#fff",
     padding: "10rem 3rem 3rem 10rem",
     overflow: "hidden",
     width: "90%",
@@ -45,8 +47,9 @@ const Styles = {
 
 const RowOne: React.FC<SimulatorRow> = ({ state, dispatch }) => (
   <Fragment>
-    <Grid item sm={7}>
+    <Grid item sm={5} className="gradient__right">
       <Typography
+        className={state.stage == 1 ? "enter__right" : "exit__left"}
         variant="h1"
         style={{
           ...Styles.Debug,
@@ -58,7 +61,7 @@ const RowOne: React.FC<SimulatorRow> = ({ state, dispatch }) => (
         Quiero {NumberFm(state.money)} <br /> a {state.months} meses.
       </Typography>
     </Grid>
-    <Grid item sm={5} style={{ display: "flex", justifyContent: "flex-end" }}>
+    <Grid item sm={7} style={{ display: "flex", justifyContent: "flex-end" }}>
       <QuestionMarkLogo />
     </Grid>
   </Fragment>
@@ -79,6 +82,7 @@ const RowTwo: React.FC<SimulatorRow> = ({ state, dispatch }) => (
         <RadioGroup
           aria-label="service_type"
           name="service_type"
+          color="primary"
           value={state.type.toString()}
           onChange={(e, v) =>
             dispatch({ type: "set_type", payload: parseInt(v) })
@@ -86,22 +90,22 @@ const RowTwo: React.FC<SimulatorRow> = ({ state, dispatch }) => (
         >
           <FormControlLabel
             value="0"
-            control={<Radio />}
+            control={<Radio color="primary" />}
             label="Pagar Tarjeta"
           />
           <FormControlLabel
             value="1"
-            control={<Radio />}
+            control={<Radio color="primary" />}
             label="Dispensar Efectivo"
           />
           <FormControlLabel
             value="2"
-            control={<Radio />}
+            control={<Radio color="primary" />}
             label="Hacer Transferencia"
           />
           <FormControlLabel
             value="3"
-            control={<Radio />}
+            control={<Radio color="primary" />}
             label="Diferir Compra"
           />
         </RadioGroup>
@@ -114,6 +118,7 @@ const RowTwo: React.FC<SimulatorRow> = ({ state, dispatch }) => (
         </Typography>
         <div style={{ flexGrow: 4 }}>
           <Slider
+            color="primary"
             onChange={(e, payload) => {
               dispatch({ type: "set_money", payload: payload as number });
             }}
@@ -155,22 +160,28 @@ const RowThree: React.FC<SimulatorRow> = ({ state, dispatch }) => (
       <Typography variant="h6">
         {(state.money / state.months).toFixed(2)} por Mes
       </Typography>
-      <ArrowForwardIcon fontSize="large" />
+      <ArrowForwardIcon
+        fontSize="large"
+        onClick={() => dispatch({ type: "toggle_stage" })}
+      />
     </Grid>
   </Fragment>
 );
 
 const Simulator: React.FC = () => {
   const [state, dispatch] = useReducer(SimulatorReducer, SimulatorInitialState);
-
   return (
-    <Paper style={Styles.Simulator as React.CSSProperties}>
+    <Box
+      className="simulator"
+      style={Styles.Simulator as React.CSSProperties}
+      boxShadow={3}
+    >
       <Grid container spacing={10} style={Styles.Debug as React.CSSProperties}>
         <RowOne {...{ state, dispatch }} />
         <RowTwo {...{ state, dispatch }} />
         <RowThree {...{ state, dispatch }} />
       </Grid>
-    </Paper>
+    </Box>
   );
 };
 
