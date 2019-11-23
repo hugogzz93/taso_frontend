@@ -1,15 +1,21 @@
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700&display=swap');
 
 $tempo: 0.3s
+$sim_blue: #66768c
+$sim_transition: 1s
 
 .fancy-font
   font-family: 'Playfair Display', serif !important
 
 .enter__right
+  transform: translateX(100%)
   animation: enterRight 1s cubic-bezier(.66,.53,.52,1.03) 1 forwards
 
 .exit__left
   animation: exitLeft 1s cubic-bezier(.66,.53,.52,1.03) 1 forwards
+
+.exit__right
+  animation: exitRight 0.3s cubic-bezier(.66,.53,.52,1.03) 1 forwards
 
 // @for $i from 1 through 10
 //   .enterRight:nth-child(#{$i})
@@ -17,11 +23,12 @@ $tempo: 0.3s
 
 .gradient__right
   overflow: hidden
-  border: 1px solid red
   position: relative
   &::after
+    transition: all $sim_transition
     content: '\a'
-    border: 1px solid blue
+    opacity: 1
+    // border: 1px solid blue
     width: 5rem
     height: 100%
     position: absolute
@@ -29,17 +36,71 @@ $tempo: 0.3s
     right: 0
     background: linear-gradient(to right, transparent 3%, white 45%)
 
+.fade__in
+  animation: fadeIn 2s cubic-bezier(.66,.53,.52,1.03) 1 forwards
 
+.simulator
+  background: #fff
+  padding: 10rem 3rem 3rem 10rem
+  overflow: hidden
+  width: 90%
+  position: absolute
+  top: 5%
+  left: 10%
+  transition: all $sim_transition
+
+.simulator--alt
+  background: $sim_blue
+
+  .gradient__right
+    &::after
+      opacity: 0
+      background: linear-gradient(to right, transparent 3%, $sim_blue 45%)
+
+.expanding-line
+  border: 1px solid transparent
+  border-bottom-color: white
+  width: 100%
+  transition: width 1s, opacity 0.3s
+  opacity: 1
+  border-radius: 100%
+
+  &.inactive
+    width: 0
+    opacity: 0
+
+    
+  
+
+@keyframes fadeIn
+  from
+    opacity: 0
+  to
+    opacity: 1
 
 @keyframes enterRight
   from 
     transform: translateX(100%)
+    opacity: 0
   to
     transform: translateX(0rem)
+    opacity: 1
+
 
 @keyframes exitLeft
   from 
     transform: translateX(0rem)
+    opacity: 1
+  70%
+    opacity: 0
   to
     transform: translateX(-100%)
-    display: none
+    opacity: 0
+
+@keyframes exitRight
+  from 
+    transform: translateX(0rem)
+    opacity: 1
+  to
+    transform: translateX(100%)
+    opacity: 0

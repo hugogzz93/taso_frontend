@@ -23,6 +23,7 @@ import {
 import { NumberFm } from "../../lib/helpers";
 import { Theme } from "../../App";
 import { ReactComponent as QuestionMarkLogo } from "../../images/question_mark_sm.svg";
+import FileUpload from "../FileUpload";
 
 interface SimulatorRow {
   state: SimulatorState;
@@ -35,9 +36,9 @@ const Styles = {
     padding: "10rem 3rem 3rem 10rem",
     overflow: "hidden",
     width: "90%",
-    height: "80%",
+    // height: "80%",
     position: "absolute",
-    top: "20%",
+    top: "5%",
     left: "10%"
   },
   Debug: {
@@ -45,9 +46,53 @@ const Styles = {
   }
 };
 
+const TypeRadios: React.FC<SimulatorRow> = ({ state, dispatch }) => (
+  <FormControl
+    className={
+      (state.stage == 1 ? "enter__right" : "exit__left") + " flex__centered"
+    }
+    style={{
+      ...Styles.Debug,
+      flexGrow: 1,
+      fontFamily: Theme.fontFamilies.serif,
+      display: "block",
+      animationDuration: "1s"
+    }}
+  >
+    <RadioGroup
+      aria-label="service_type"
+      name="service_type"
+      color="primary"
+      value={state.type.toString()}
+      onChange={(e, v) => dispatch({ type: "set_type", payload: parseInt(v) })}
+    >
+      <FormControlLabel
+        value="0"
+        control={<Radio color="primary" />}
+        label="Pagar Tarjeta"
+      />
+      <FormControlLabel
+        value="1"
+        control={<Radio color="primary" />}
+        label="Dispensar Efectivo"
+      />
+      <FormControlLabel
+        value="2"
+        control={<Radio color="primary" />}
+        label="Hacer Transferencia"
+      />
+      <FormControlLabel
+        value="3"
+        control={<Radio color="primary" />}
+        label="Diferir Compra"
+      />
+    </RadioGroup>
+  </FormControl>
+);
+
 const RowOne: React.FC<SimulatorRow> = ({ state, dispatch }) => (
   <Fragment>
-    <Grid item sm={5} className="gradient__right">
+    <Grid item sm={7} className="gradient__right">
       <Typography
         className={state.stage == 1 ? "enter__right" : "exit__left"}
         variant="h1"
@@ -60,86 +105,83 @@ const RowOne: React.FC<SimulatorRow> = ({ state, dispatch }) => (
       >
         Quiero {NumberFm(state.money)} <br /> a {state.months} meses.
       </Typography>
+      <Typography
+        className={state.stage == 1 ? "exit__left" : "enter__right"}
+        style={{
+          fontFamily: "Playfair Display",
+          textAlign: "left",
+          position: "absolute",
+          top: "0",
+          color: "white"
+        }}
+        variant="h1"
+      >
+        Registro de <br /> documentos
+      </Typography>
+      <div
+        className={(state.stage == 1 ? "inactive" : "") + " expanding-line"}
+      ></div>
     </Grid>
-    <Grid item sm={7} style={{ display: "flex", justifyContent: "flex-end" }}>
-      <QuestionMarkLogo />
+    <Grid item sm={5} style={{ display: "flex", justifyContent: "flex-end" }}>
+      <QuestionMarkLogo
+        className={state.stage == 1 ? "fade__in" : "exit__right"}
+      />
     </Grid>
   </Fragment>
 );
 
 const RowTwo: React.FC<SimulatorRow> = ({ state, dispatch }) => (
   <Fragment>
-    <Grid item sm={3}>
-      <FormControl
-        className="flex-centered"
+    <Grid item sm={3} className="gradient__right">
+      <TypeRadios {...{ state, dispatch }} />
+    </Grid>
+    <Grid item sm={8} className="gradient__right">
+      <div
+        className={state.stage == 1 ? "enter__right" : "exit__left"}
         style={{
-          ...Styles.Debug,
-          flexGrow: 1,
-          fontFamily: Theme.fontFamilies.serif,
-          display: "block"
+          animationDuration: "1s"
         }}
       >
-        <RadioGroup
-          aria-label="service_type"
-          name="service_type"
-          color="primary"
-          value={state.type.toString()}
-          onChange={(e, v) =>
-            dispatch({ type: "set_type", payload: parseInt(v) })
-          }
-        >
-          <FormControlLabel
-            value="0"
-            control={<Radio color="primary" />}
-            label="Pagar Tarjeta"
-          />
-          <FormControlLabel
-            value="1"
-            control={<Radio color="primary" />}
-            label="Dispensar Efectivo"
-          />
-          <FormControlLabel
-            value="2"
-            control={<Radio color="primary" />}
-            label="Hacer Transferencia"
-          />
-          <FormControlLabel
-            value="3"
-            control={<Radio color="primary" />}
-            label="Diferir Compra"
-          />
-        </RadioGroup>
-      </FormControl>
-    </Grid>
-    <Grid item sm={8}>
-      <div>
-        <Typography variant="h5" style={{ flexGrow: 1 }}>
-          {NumberFm(state.money)}
-        </Typography>
-        <div style={{ flexGrow: 4 }}>
+        <div>
+          <Typography variant="h5" style={{ flexGrow: 1 }}>
+            {NumberFm(state.money)}
+          </Typography>
+          <div style={{ flexGrow: 4 }}>
+            <Slider
+              color="primary"
+              onChange={(e, payload) => {
+                dispatch({ type: "set_money", payload: payload as number });
+              }}
+              value={state.money}
+              min={MIN_MONEY}
+              max={MAX_MONEY}
+            />
+          </div>
+        </div>
+        <div>
+          <Typography variant="h5">{state.months} Meses</Typography>
           <Slider
-            color="primary"
             onChange={(e, payload) => {
-              dispatch({ type: "set_money", payload: payload as number });
+              dispatch({ type: "set_months", payload: payload as number });
             }}
-            value={state.money}
-            min={MIN_MONEY}
-            max={MAX_MONEY}
+            value={state.months}
+            marks={AVAILABLE_MONTHS.map(e => ({ value: e }))}
+            step={null}
+            min={AVAILABLE_MONTHS[0]}
+            max={AVAILABLE_MONTHS[AVAILABLE_MONTHS.length - 1]}
           />
         </div>
       </div>
-      <div>
-        <Typography variant="h5">{state.months} Meses</Typography>
-        <Slider
-          onChange={(e, payload) => {
-            dispatch({ type: "set_months", payload: payload as number });
-          }}
-          value={state.months}
-          marks={AVAILABLE_MONTHS.map(e => ({ value: e }))}
-          step={null}
-          min={AVAILABLE_MONTHS[0]}
-          max={AVAILABLE_MONTHS[AVAILABLE_MONTHS.length - 1]}
-        />
+      <div className="flex__centered">
+        <div className={state.stage == 1 ? "exit__left" : "enter__right"} >
+          <FileUpload
+            onChange={e => {
+              e.target.files > 0 &&
+                dispatch({ type: "set_ine", payload: e.target.files[0] });
+            }}
+            value={state.ine}
+          />
+        </div>
       </div>
     </Grid>
   </Fragment>
@@ -157,11 +199,16 @@ const RowThree: React.FC<SimulatorRow> = ({ state, dispatch }) => (
         justifyContent: "space-between"
       }}
     >
-      <Typography variant="h6">
+      <Typography
+        variant="h6"
+        className={state.stage == 1 ? "fade__in" : "exit__right"}
+      >
         {(state.money / state.months).toFixed(2)} por Mes
       </Typography>
       <ArrowForwardIcon
         fontSize="large"
+        className={state.stage == 1 ? "fade__in" : "exit__right"}
+        style={{ cursor: "pointer", animationFillMode: "none" }}
         onClick={() => dispatch({ type: "toggle_stage" })}
       />
     </Grid>
@@ -172,8 +219,7 @@ const Simulator: React.FC = () => {
   const [state, dispatch] = useReducer(SimulatorReducer, SimulatorInitialState);
   return (
     <Box
-      className="simulator"
-      style={Styles.Simulator as React.CSSProperties}
+      className={(state.stage == 1 ? "" : "simulator--alt") + " simulator"}
       boxShadow={3}
     >
       <Grid container spacing={10} style={Styles.Debug as React.CSSProperties}>
