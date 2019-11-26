@@ -173,15 +173,29 @@ const RowTwo: React.FC<SimulatorRow> = ({ state, dispatch }) => (
         </div>
       </div>
       <div className="flex__centered">
-        <div className={state.stage == 1 ? "exit__left" : "enter__right"} >
-          <FileUpload
-            onChange={e => {
-              e.target.files > 0 &&
-                dispatch({ type: "set_ine", payload: e.target.files[0] });
-            }}
-            value={state.ine}
-          />
-        </div>
+        <Grid
+          container
+          className={state.stage == 1 ? "exit__left" : "enter__right"}
+        >
+          <Grid item sm={6}>
+            <FileUpload
+              onChange={e => {
+                if (e.target.files.length > 0)
+                  dispatch({ type: "set_ife", payload: e.target.files[0] });
+              }}
+              value={state.ife}
+              label={"IFE"}
+            />
+            <FileUpload
+              onChange={e => {
+                if (e.target.files.length > 0)
+                  dispatch({ type: "set_ine", payload: e.target.files[0] });
+              }}
+              value={state.ine}
+              label={"INE"}
+            />
+          </Grid>
+        </Grid>
       </div>
     </Grid>
   </Fragment>
