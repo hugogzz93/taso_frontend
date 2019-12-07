@@ -4,6 +4,14 @@ import "./base.sass";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FrontPage from "./frontpage";
 import { ThemeProvider } from "styled-components";
+import Wrapper from "./wrapper";
+// import "./lib/html5up/breakpoints.min.js";
+// import "./lib/html5up/js/jquery.min.js";
+// import "./lib/html5up/js/jquery.scrolly.min.js";
+// import "./lib/html5up/js/browser.min.js";
+// import "./lib/html5up/js/breakpoints.min.js";
+// import "./lib/html5up/js/util.js";
+// import "./lib/html5up/js/main.js";
 
 export const Theme = {
   colors: {
@@ -21,8 +29,9 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={Theme}>
       <div className="App">
-        <CssBaseline />
-        <FrontPage />
+        {/* <CssBaseline /> */}
+        {/* <FrontPage /> */}
+        <Wrapper />
       </div>
     </ThemeProvider>
   );
