@@ -21,7 +21,6 @@ import {
   AVAILABLE_MONTHS
 } from "./SimulatorReducer";
 import { NumberFm } from "../../lib/helpers";
-import { Theme } from "../../App";
 import { ReactComponent as QuestionMarkLogo } from "../../images/question_mark_sm.svg";
 import FileUpload from "../FileUpload";
 
@@ -30,31 +29,14 @@ interface SimulatorRow {
   dispatch: any;
 }
 
-const Styles = {
-  Simulator: {
-    background: "#fff",
-    padding: "10rem 3rem 3rem 10rem",
-    overflow: "hidden",
-    width: "90%",
-    // height: "80%",
-    position: "absolute",
-    top: "5%",
-    left: "10%"
-  },
-  Debug: {
-    // border: '1px solid black'
-  }
-};
-
 const TypeRadios: React.FC<SimulatorRow> = ({ state, dispatch }) => (
   <FormControl
     className={
       (state.stage == 1 ? "enter__right" : "exit__left") + " flex__centered"
     }
     style={{
-      ...Styles.Debug,
       flexGrow: 1,
-      fontFamily: Theme.fontFamilies.serif,
+      fontFamily: "'Playfair Display', serif",
       display: "block",
       animationDuration: "1s"
     }}
@@ -97,7 +79,6 @@ const RowOne: React.FC<SimulatorRow> = ({ state, dispatch }) => (
         className={state.stage == 1 ? "enter__right" : "exit__left"}
         variant="h1"
         style={{
-          ...Styles.Debug,
           gridColumn: "1",
           fontFamily: "Playfair Display",
           textAlign: "left"
@@ -207,7 +188,6 @@ const RowThree: React.FC<SimulatorRow> = ({ state, dispatch }) => (
       item
       xs={12}
       style={{
-        ...Styles.Debug,
         display: "flex",
         alignItems: "flex-end",
         justifyContent: "space-between"
@@ -236,7 +216,7 @@ const Simulator: React.FC = () => {
       className={(state.stage == 1 ? "" : "simulator--alt") + " simulator"}
       boxShadow={3}
     >
-      <Grid container spacing={10} style={Styles.Debug as React.CSSProperties}>
+      <Grid container spacing={10}>
         <RowOne {...{ state, dispatch }} />
         <RowTwo {...{ state, dispatch }} />
         <RowThree {...{ state, dispatch }} />

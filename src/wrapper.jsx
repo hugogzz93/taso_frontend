@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer } from "react";
 import picjpg01 from "./images/pic01.jpg";
 import picjpg02 from "./images/pic02.jpg";
 import jpg01 from "./images/gallery/thumbs/01.jpg";
@@ -11,50 +11,172 @@ import jpg07 from "./images/gallery/thumbs/07.jpg";
 import jpg08 from "./images/gallery/thumbs/08.jpg";
 import jpg09 from "./images/gallery/thumbs/09.jpg";
 import jpg10 from "./images/gallery/thumbs/10.jpg";
+import Simulator from "./components/Simulator";
+import {
+  SimulatorReducer,
+  SimulatorInitialState,
+  SimulatorState,
+  MIN_MONEY,
+  MAX_MONEY,
+  AVAILABLE_MONTHS
+} from "./components/Simulator/SimulatorReducer";
+import {
+  Select,
+  MenuItem,
+  InputLabel,
+  Typography,
+  Paper,
+  Box,
+  FormControl,
+  RadioGroup,
+  Radio,
+  Grid,
+  Slider,
+  FormControlLabel
+} from "@material-ui/core";
+import FileUpload from "./components/FileUpload";
+const scrollTo = selector => {
+  document.querySelector(selector).scrollIntoView({
+    behavior: "smooth"
+  });
+};
 
 const Wrapper = () => {
+  const [state, dispatch] = useReducer(SimulatorReducer, SimulatorInitialState);
+  const charCount = state.money.toString().length;
+
+  const Buttons = [
+    "Pagar Tarjeta",
+    "Dispensar Efectivo",
+    "Hacer Transferencia",
+    "Diferir compra especifica"
+  ].map((message, i) => (
+    <li>
+      <button
+        className={`button large ${state.type == i ? "primary" : ""}`}
+        key={message}
+        style={{ margin: "1rem", width: "80%" }}
+        onClick={e => dispatch({ type: "set_type", payload: i })}
+      >
+        {message}
+      </button>
+    </li>
+  ));
+
   return (
     <div id="wrapper">
       <section className="intro">
         <header>
-          <h1>Paradigm Shift</h1>
-          <p>
-            A free responsive site template designed by{" "}
-            <a href="https://twitter.com/ajlkn">@ajlkn</a> /{" "}
-            <a href="https://html5up.net">HTML5 UP</a>
-          </p>
+          <h1>Taso</h1>
+          <p>Deudas de tarjetas renegociadas.</p>
           <ul className="actions">
             <li>
-              <a href="#first" className="arrow scrolly">
+              <a
+                href="#first"
+                className="arrow"
+                onClick={e => {
+                  e.preventDefault();
+                  scrollTo("#second");
+                }}
+              >
                 <span className="label">Next</span>
               </a>
             </li>
           </ul>
         </header>
-        <div className="content">
-          <span className="image fill" data-position="center">
-            <img src={picjpg01} alt="" />
-          </span>
+        <div
+          className="content"
+          style={{ display: "flex", alignItems: "center" }}
+        >
+          <div className="fields" data-position="center">
+            <h1>
+              Quiero{" "}
+              <input
+                style={{ width: (charCount > 5 ? 5 : charCount) + "em" }}
+                className="sim__input sim__text-input"
+                type="text"
+                value={state.money}
+                onChange={e =>
+                  dispatch({ type: "set_money", payload: e.target.value })
+                }
+              />
+              a{" "}
+              <FormControl>
+                <Select
+                  defaultValue={AVAILABLE_MONTHS[0]}
+                  className="sim__input"
+                  style={{ background: "none" }}
+                  labelId="month-qty"
+                  id="month-qty"
+                  value={state.month}
+                  onChange={e =>
+                    dispatch({ type: "set_months", payload: e.target.value })
+                  }
+                >
+                  {AVAILABLE_MONTHS.map(e => (
+                    <MenuItem value={e}>{e}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>{" "}
+              meses sin intereses.
+            </h1>
+          </div>
         </div>
       </section>
-
-      <section id="first">
+      <section>
         <header>
-          <h2>Magna sed nullam nisl adipiscing</h2>
+          <h2 id="second">Escoge un Servicio</h2>
         </header>
         <div className="content">
-          <p>
-            <strong>Lorem ipsum dolor</strong> sit amet consectetur adipiscing
-            elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad
-            litora torquent per conubia nostra, per inceptos himenaeos. Etiam
-            tristique libero eu nibh porttitor amet fermentum. Nullam venenatis
-            erat id vehicula ultrices sed ultricies condimentum. Magna sed etiam
-            consequat, et lorem adipiscing sed nulla. Volutpat nisl et tempus et
-            dolor libero, feugiat magna tempus, sed et lorem adipiscing.
-          </p>
-          <span className="image main">
-            <img src={picjpg02} alt="" />
-          </span>
+          <ul
+            className="actions"
+            style={{ display: "flex", flexDirection: "column" }}
+          >
+            {Buttons}
+          </ul>
+        </div>
+      </section>
+      <section id="first">
+        <header>
+          <h2>Ingresa tus datos</h2>
+        </header>
+        <div className="content">
+          <form>
+            <div className="fields" data-position="center">
+              <div className="field">
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="Email"
+                  value={state.email}
+                  onChange={e =>
+                    dispatch({ type: "set_email", payload: e.target.value })
+                  }
+                />
+              </div>
+              <div className="field">
+                <FileUpload
+                  onChange={e => {
+                    if (e.target.files.length > 0)
+                      dispatch({ type: "set_ife", payload: e.target.files[0] });
+                  }}
+                  value={state.ife}
+                  label={"IFE"}
+                />
+              </div>
+              <div className="field">
+                <FileUpload
+                  onChange={e => {
+                    if (e.target.files.length > 0)
+                      dispatch({ type: "set_ine", payload: e.target.files[0] });
+                  }}
+                  value={state.ine}
+                  label={"INE"}
+                />
+              </div>
+            </div>
+          </form>
         </div>
       </section>
 
@@ -176,32 +298,7 @@ const Wrapper = () => {
 
       <section>
         <header>
-          <h2>Duis sed adpiscing veroeros amet</h2>
-        </header>
-        <div className="content">
-          <p>
-            <strong>Proin tempus feugiat</strong> sed varius enim lorem
-            ullamcorper dolore aliquam aenean ornare velit lacus, ac varius enim
-            lorem ullamcorper dolore.
-          </p>
-          <ul className="actions">
-            <li>
-              <a href="#" className="button primary large">
-                Get Started
-              </a>
-            </li>
-            <li>
-              <a href="#" className="button large">
-                Learn More
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <section>
-        <header>
-          <h2>Get in touch</h2>
+          <h2>Contáctanos</h2>
         </header>
         <div className="content">
           <p>
@@ -249,20 +346,18 @@ const Wrapper = () => {
               <a href="#">information@untitled.ext</a>
             </li>
             <li>
-              <h3>Phone</h3>
+              <h3>Teléfono</h3>
               <a href="#">(000) 000-0000</a>
             </li>
             <li>
-              <h3>Address</h3>
+              <h3>Dirección</h3>
               <span>1234 Somewhere Road, Nashville, TN 00000</span>
             </li>
             <li>
-              <h3>Elsewhere</h3>
+              <h3>Redes Sociales</h3>
               <ul className="icons">
                 <li>
-                  <a href="#" className="icon brands fa-twitter">
-                    <span className="label">Twitter</span>
-                  </a>
+                  <i className="fab fa-facebook-f"></i>
                 </li>
                 <li>
                   <a href="#" className="icon brands fa-facebook-f">

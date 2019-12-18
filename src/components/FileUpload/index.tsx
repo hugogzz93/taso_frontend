@@ -4,10 +4,12 @@ import styled from "styled-components";
 
 const Span = styled("span")<{ message: string }>`
   background: transparent;
-  color: white;
-  font-weight: bolde
+  color: black;
+  font-weight: bold;
   &::after {
-    content: '${props => props.message}'
+    content: '${props => props.message}';
+    position: absolute;
+    left: 1rem;
   }
   &::before {
     content: 'Buscar'
@@ -16,7 +18,6 @@ const Span = styled("span")<{ message: string }>`
 
 const Label = styled.label`
   width: 100%;
-  margin: 1rem;
 `;
 
 const FileUpload: React.FC<InputParams & { label: string }> = ({
@@ -25,9 +26,11 @@ const FileUpload: React.FC<InputParams & { label: string }> = ({
   label
 }) => {
   const message = value ? value.name : label;
-
+  const styles = {
+    backgroundColor: "#e8f0fe"
+  };
   return (
-    <Label className="file">
+    <Label className="file" style={value ? styles : {}}>
       <input
         type="file"
         onChange={onChange}

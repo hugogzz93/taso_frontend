@@ -5,6 +5,8 @@
 $tempo: 0.3s
 $sim_blue: #66768c
 $sim_transition: 1s
+$theme-green: #2fe3bb
+$main-color: $theme-green
 
 *,
 *:before,
@@ -30,6 +32,38 @@ $sim_transition: 1s
 //   .enterRight:nth-child(#{$i})
 //     animation-delay: $i * 0.2s !important
 
+.sim__input.sim__input
+  display: inline
+  font-size: inherit
+  text-align: center
+  font-weight: 300
+
+  .MuiSelect-icon
+    display: none
+
+  .MuiSelect-selectMenu.MuiSelect-selectMenu
+    padding: 0
+    margin: 0
+    &:hover, &:focus
+      border-radius: 5%
+      background: transparent
+
+  .MuiInput-underline:after
+    border-bottom: 2px solid $main-color
+      
+
+.button:focus
+  outline: 0
+
+.sim__text-input.sim__text-input
+  margin: 0.15em
+  height: 1em
+  min-width: 3em
+  border: 1px solid transparent
+  border-bottom: 1px solid green
+
+
+
 .gradient__right
   overflow: hidden
   position: relative
@@ -52,11 +86,9 @@ $sim_transition: 1s
   background: #fff
   padding: 10rem 3rem 3rem 10rem
   overflow: hidden
-  width: 90%
-  position: absolute
-  top: 5%
-  left: 10%
+  width: 92%
   transition: all $sim_transition
+  z-index: 4
 
 .simulator--alt
   background: $sim_blue
